@@ -33,8 +33,8 @@ class itemAdapter(val context: Context, val items: ArrayList<dbModel>): Recycler
         val items = items.get(position)
         holder.tvId.text = items.id.toString()
         holder.tvDesc.text = items.desc
-//        holder.tvDate.text = items.date
-//        holder.tvLoc.text = items.loc
+        holder.tvDate.text = items.date
+        holder.tvLoc.text = items.loc
 
         if (position % 2 == 0){
             holder.llmain.setBackgroundColor(ContextCompat.getColor(context, R.color.blue))

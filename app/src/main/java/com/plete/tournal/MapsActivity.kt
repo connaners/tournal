@@ -30,10 +30,11 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 
-open class MapsActivity : AppCompatActivity() {
+class MapsActivity : AppCompatActivity() {
 
-    open lateinit var mMap: GoogleMap
-//    open lateinit var address: String
+    private lateinit var mMap: GoogleMap
+    private lateinit var datee: String
+    private lateinit var address: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,7 @@ open class MapsActivity : AppCompatActivity() {
 
         btnSet.setOnClickListener {
             addRecord()
+            etDesc.text.clear()
         }
 
         val history = Intent(application, history::class.java)
@@ -53,22 +55,14 @@ open class MapsActivity : AppCompatActivity() {
 
     }
 
-    /*
-    fun getLoc(){
-        address
-    }
-
-     */
 
     private fun addRecord(){
         val desc = etDesc.text.toString()
 
-//        val loc = address.toString()
-
         val dbHandler = dbHandler(this)
 
         if (!desc.isEmpty()){
-            val status = dbHandler.save((dbModel(0, desc, "date", "loc")))
+            val status = dbHandler.save((dbModel(0, desc, datee, address)))
             if (status > 0){
                 Toast.makeText(this, "record saved", Toast.LENGTH_LONG).show()
             }
@@ -115,6 +109,7 @@ open class MapsActivity : AppCompatActivity() {
         }
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest, object : LocationCallback(){
+                @SuppressLint("SimpleDateFormat")
                 override fun onLocationResult(p0: LocationResult) {
                     super.onLocationResult(p0)
                     for (location in p0.locations){
@@ -147,7 +142,11 @@ open class MapsActivity : AppCompatActivity() {
 
                                     var myLocation = LatLng(currentLatitude, currentLongitude)
 
-//                                    address = geoCoderResult[0].getAddressLine(0).toString()
+                                    val sdf = SimpleDateFormat("""dd MMMM yyyy
+                                                                |hh:mm:ss""".trimMargin(), Locale.getDefault())
+                                    datee = sdf.format(Date()).toString()
+
+                                    address = geoCoderResult[0].getAddressLine(0).toString()
 
                                     mMap.addMarker(MarkerOptions().position(myLocation).title(geoCoderResult[0].getAddressLine(0))).showInfoWindow()
                                     mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation))
@@ -161,5 +160,4 @@ open class MapsActivity : AppCompatActivity() {
             Looper.myLooper()
         )
     }
-
 }

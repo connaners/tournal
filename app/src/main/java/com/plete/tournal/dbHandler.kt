@@ -25,7 +25,7 @@ class dbHandler(context: Context): SQLiteOpenHelper
     override fun onCreate(db: SQLiteDatabase?) {
         val createTable = ("""
             create table $tableName ($keyId integer primary key, $keyDesc text,
-            $keyDate date, $keyLoc text)
+            $keyDate text, $keyLoc text)
         """.trimIndent())
         db?.execSQL(createTable)
     }
@@ -40,8 +40,8 @@ class dbHandler(context: Context): SQLiteOpenHelper
         val contentvalues = ContentValues()
 
         contentvalues.put(keyDesc, DB.desc)
-//        contentvalues.put(keyDate, DB.date)
-//        contentvalues.put(keyLoc, DB.loc)
+        contentvalues.put(keyDate, DB.date)
+        contentvalues.put(keyLoc, DB.loc)
 
         val success = db.insert(tableName, null, contentvalues)
         db.close()
@@ -71,11 +71,11 @@ class dbHandler(context: Context): SQLiteOpenHelper
             do {
                 id = cursor.getInt((cursor.getColumnIndex(keyId)))
                 desc = cursor.getString((cursor.getColumnIndex(keyDesc)))
-//                date = cursor.getString((cursor.getColumnIndex(keyDate)))
-//                loc = cursor.getString((cursor.getColumnIndex(keyLoc)))
+                date = cursor.getString(cursor.getColumnIndex(keyDate))
+                loc = cursor.getString((cursor.getColumnIndex(keyLoc)))
 
-                val DB = dbModel(id, desc, "date", "loc")
-                dbList.add(DB)
+                val dB = dbModel(id, desc, date, loc)
+                dbList.add(dB)
             } while (cursor.moveToNext())
         }
         return dbList

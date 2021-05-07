@@ -13,14 +13,9 @@ class history : AppCompatActivity() {
         setupListOfDataIntoRecyclerView()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
-    }
-
     private fun getItemList(): ArrayList<dbModel>{
-        val DBHandler: dbHandler = dbHandler(this)
-        val DBList: ArrayList<dbModel> = DBHandler.viewDB()
+        val dBHandler: dbHandler = dbHandler(this)
+        val DBList: ArrayList<dbModel> = dBHandler.viewDB()
         return DBList
     }
 
